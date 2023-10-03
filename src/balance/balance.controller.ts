@@ -21,7 +21,10 @@ export default class BalanceController {
 
 	public async checkBalance(req: Request, res: Response) {
 		const login = req.query[`login`];
-		if (!login || typeof(login) !== `string`) throw new Error(HttpError.LOGIN_NOT_FOUND);
+		if (!login || typeof(login) !== `string`) {
+			res.status(400).send(HttpError.LOGIN_NOT_FOUND);
+			return;
+		};
 
 		this.service
 			.checkBalance(login)
@@ -42,8 +45,14 @@ export default class BalanceController {
 	public async checkBalanceWithToken(req: Request, res: Response) {
 		const login = req.query[`login`];
 		const auth = req.query[`auth`];
-		if (!login || typeof(login) !== `string`) throw new Error(HttpError.LOGIN_NOT_FOUND);
-		if (!auth || typeof(auth) !== `string`) throw new Error(HttpError.AUTH_NOT_FOUND);
+		if (!login || typeof(login) !== `string` || login.trim() === ``) {
+			res.status(400).send(HttpError.LOGIN_NOT_FOUND);
+			return;
+		}
+		if (!auth || typeof(auth) !== `string` || auth.trim() === ``) {
+			res.status(400).send(HttpError.COOKIE_NOT_FOUND);
+			return;
+		}
 
 		this.service
 			.checkBalance(login, auth)
