@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  redis:
+    container_name: Test-redis
+    image: redis:latest
+    restart: always
+    ports:
+      - '${REDIS_PORT}:6379'
+
+  app:
+    container_name: Test-express
+    build:
+      context: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: bun --watch src/main.ts
+    env_file:
+      - .env
+    ports:
+      - "${PORT}:${PORT}"
+    restart: always
+    depends_on:
+      - redis
+
+volumes:
+  app:
