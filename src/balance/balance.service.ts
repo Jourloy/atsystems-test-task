@@ -23,6 +23,6 @@ export default class BalanceService {
 
 		if (!resp || resp.status !== 200 || resp.data.code !== 200) throw new Error(`Server error`);
 
-		return {status: `OK`, balance: resp.data.data.balance, currency: resp.data.data.currency};
+		return {status: true, balance: resp.data.data.balance, currency: resp.data.data.currency};
 	}
 }
